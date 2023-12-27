@@ -18,7 +18,7 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user2s")
     public String printUserTable(Model model) {
         model.addAttribute("ListUser", userService.getUserList());
         return "admin/users";

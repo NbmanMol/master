@@ -34,7 +34,7 @@ public class AuthController {
 
     @GetMapping("/registration")
     public String getRegistrationPage(Model model) {
-        model.addAttribute("user",new User());
+        model.addAttribute("user", new User());
         return "auth/registration";
     }
 

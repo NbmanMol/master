@@ -24,44 +24,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userServiceImp = userServiceImp;
     }
 
-//            @Autowired
-//    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
-//        this.successUserHandler = successUserHandler;
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //конфигурация самого Spring security
-        // конфигурация авторизации
+
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER","ADMIN")
-                .antMatchers("/auth/login", "/auth/registration", "/error").permitAll() // могут попасть сюда
-//                .anyRequest().hasAnyRole("USER","ADMIN")
-//                .anyRequest().authenticated() // а в остальные места, могут попасть только авторизированные пользователи
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/auth/login", "/auth/registration", "/error").permitAll() //все могут сюда попасть
                 .and() //и
                 .formLogin()  //форма логина
                 .loginPage("/auth/login")  //страница логина базовая
                 .loginProcessingUrl("/process_login") // откуда получит инфу(postMappping типо)
-                .successHandler( successUserHandler )
-//                .permitAll()
-//                .defaultSuccessUrl("/user", true) //в случае успешной авторизации попадёт сюда
+                .successHandler(successUserHandler)//  в случае успешного входа разбираться будет этот класс
                 .failureUrl("/auth/login?error") // в случае неуспешной попадёт сюда(в таймлифе прописываем еррор)
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/auth/login");
-//                .authorizeRequests()
-//                .antMatchers("/", "/index").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().successHandler(successUserHandler)
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
     }
 
-    // Настраивание аутентификации
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         try {
@@ -75,18 +56,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 }

@@ -30,10 +30,8 @@ public class User {
     @NotEmpty(message = "Пароль должен быть!")
     @Column(name = "password")
     private String password;
-    //    @Column(name = "role")
-//    private String role;
     @Fetch(FetchMode.JOIN)
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles_table",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -55,14 +53,6 @@ public class User {
         this.password = password;
     }
 
-//    public User(String firstName, String lastName, String email, String password, String role) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.password = password;
-//        this.role = role;
-//    }
-
     public User(String firstName, String lastName, String email, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,19 +60,12 @@ public class User {
         this.password = password;
         this.role = roles;
     }
-    //    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
 
     public Integer getId() {
         return id;
     }
 
-    public Collection<Role> getRole() {
+    public Set<Role> getRole() {
         return role;
     }
 
@@ -130,7 +113,6 @@ public class User {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     @Override
     public boolean equals(Object o) {
